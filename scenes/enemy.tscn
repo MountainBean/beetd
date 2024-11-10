@@ -1,0 +1,61 @@
+[gd_scene load_steps=9 format=3 uid="uid://dnnwgb6fs3rw3"]
+
+[ext_resource type="Texture2D" uid="uid://bbmfbdbbudp2q" path="res://assets/basic asset pack/Basic Vermin Animations/Tainted Cockroach/TaintedCockroach.png" id="1_mkbpt"]
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_wwmqq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ucv18"]
+atlas = ExtResource("1_mkbpt")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n5nbx"]
+atlas = ExtResource("1_mkbpt")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p7u34"]
+atlas = ExtResource("1_mkbpt")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2s7uy"]
+atlas = ExtResource("1_mkbpt")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0cwqb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ucv18")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n5nbx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p7u34")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2s7uy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t2i5q"]
+radius = 5.0
+
+[node name="Enemy" type="PathFollow2D"]
+rotates = false
+loop = false
+script = ExtResource("1_wwmqq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -8)
+sprite_frames = SubResource("SpriteFrames_0cwqb")
+autoplay = "default"
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -5)
+shape = SubResource("CircleShape2D_t2i5q")

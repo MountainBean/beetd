@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://brrf7fsil1mhw"]
+
+[ext_resource type="Script" path="res://scripts/hive.gd" id="1_tvjx5"]
+[ext_resource type="Texture2D" uid="uid://dkr22ahsdws7f" path="res://assets/custom/hive_tile.png" id="1_x6ib7"]
+[ext_resource type="PackedScene" uid="uid://robbberblnb6" path="res://scenes/hive_defend_radius.tscn" id="3_35f72"]
+[ext_resource type="PackedScene" uid="uid://ibpbfi0g770w" path="res://scenes/arrow_pointer.tscn" id="4_ujshe"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xrd0x"]
+radius = 13.0
+
+[node name="Hive" type="Area2D"]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(0, -15)
+script = ExtResource("1_tvjx5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_x6ib7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("CircleShape2D_xrd0x")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="HiveDefendRadius" parent="." instance=ExtResource("3_35f72")]
+
+[node name="ArrowPointer" parent="." instance=ExtResource("4_ujshe")]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="area_entered" from="HiveDefendRadius" to="." method="_on_hive_defend_radius_entered"]
+[connection signal="area_exited" from="HiveDefendRadius" to="." method="_on_hive_defend_radius_exited"]

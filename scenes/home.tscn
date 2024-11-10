@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://cffa24xwof6hf"]
+
+[ext_resource type="Texture2D" uid="uid://lpedsem2fxhy" path="res://assets/tribalhero_graphics/TOWNCENTER_STRUCTURE.png" id="1_xwyj2"]
+
+[node name="Home" type="Area2D"]
+position = Vector2(0, -17)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_xwyj2")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(33, 17, 0, 0, -32, 18, 0, 34)

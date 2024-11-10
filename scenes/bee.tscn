@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://c07kf3s1qudr0"]
+
+[ext_resource type="Script" path="res://scripts/bee.gd" id="1_gv8p8"]
+[ext_resource type="Texture2D" uid="uid://dutwvwx261umn" path="res://assets/custom/bee.png" id="1_vlbpi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jqwy5"]
+radius = 4.0
+
+[node name="Bee" type="Node2D"]
+z_index = 3
+script = ExtResource("1_gv8p8")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="Area2D"]
+texture = ExtResource("1_vlbpi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_jqwy5")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

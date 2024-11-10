@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://robbberblnb6"]
+
+[ext_resource type="Script" path="res://scripts/hive_defend_radius.gd" id="1_gyt7j"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wty0s"]
+
+[node name="HiveDefendRadius" type="Area2D"]
+collision_mask = 4
+script = ExtResource("1_gyt7j")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_wty0s")

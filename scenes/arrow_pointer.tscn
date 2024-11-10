@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ibpbfi0g770w"]
+
+[ext_resource type="Texture2D" uid="uid://ck51ed1jwfxih" path="res://assets/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Arrow(Projectile)/Arrow01(32x32).png" id="1_hxbb6"]
+
+[node name="ArrowPointer" type="Sprite2D"]
+position = Vector2(1, -10)
+rotation = 1.5708
+texture = ExtResource("1_hxbb6")
