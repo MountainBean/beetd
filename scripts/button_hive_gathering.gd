@@ -1,6 +1,6 @@
 extends Button
 
-@onready var hive = preload("res://scenes/hive.tscn")
+@onready var hive = preload("res://scenes/hives/hive_gathering.tscn")
 
 
 func _on_button_up():

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bsg1hcju7aqna"]
 
-[ext_resource type="Texture2D" uid="uid://bcjfotnxdojnp" path="res://assets/custom/hive.png" id="1_88w0y"]
-[ext_resource type="Script" path="res://scripts/hive_button.gd" id="2_x8hrt"]
+[ext_resource type="Script" path="res://scripts/ui.gd" id="1_iyy6h"]
+[ext_resource type="Script" path="res://scripts/inventory_grid.gd" id="1_wek1o"]
 
 [node name="UI" type="Control"]
 layout_mode = 3
@@ -10,57 +10,36 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_iyy6h")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="InventoryPanel" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(400, 288)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="BoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="InventoryGrid" type="GridContainer" parent="InventoryPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 8
+script = ExtResource("1_wek1o")
 
-[node name="VBoxContainer2" type="BoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VBoxContainer3" type="BoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VBoxContainer4" type="BoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VBoxContainer5" type="BoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer5"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 50
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 50
-
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/VBoxContainer5/MarginContainer"]
-layout_mode = 2
-
-[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer/VBoxContainer5/MarginContainer/PanelContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer5/MarginContainer/PanelContainer/CenterContainer"]
-layout_mode = 2
-
-[node name="HiveButton" type="Button" parent="HBoxContainer/VBoxContainer5/MarginContainer/PanelContainer/CenterContainer/VBoxContainer"]
-layout_mode = 2
-text = "Hive"
-icon = ExtResource("1_88w0y")
-script = ExtResource("2_x8hrt")
-
-[connection signal="button_up" from="HBoxContainer/VBoxContainer5/MarginContainer/PanelContainer/CenterContainer/VBoxContainer/HiveButton" to="HBoxContainer/VBoxContainer5/MarginContainer/PanelContainer/CenterContainer/VBoxContainer/HiveButton" method="_on_button_up"]
+[connection signal="hidden" from="InventoryPanel" to="." method="_on_inventory_panel_hidden"]

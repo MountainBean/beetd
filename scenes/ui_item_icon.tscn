@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=3 uid="uid://dbcbcxsrrjfaj"]
+
+[ext_resource type="Script" path="res://scripts/ui_item_icon.gd" id="1_b01f5"]
+[ext_resource type="Texture2D" uid="uid://dkr22ahsdws7f" path="res://assets/custom/hive_tile.png" id="1_befpw"]
+[ext_resource type="Texture2D" uid="uid://bmw8p503rs0ia" path="res://assets/custom/item_border.png" id="2_g3wir"]
+
+[sub_resource type="Gradient" id="Gradient_ceymt"]
+offsets = PackedFloat32Array(0, 0.12987, 0.850649, 1)
+colors = PackedColorArray(0.370365, 0.370364, 0.370364, 1, 0.53454, 0.674271, 0.748977, 1, 0.517995, 0.657837, 0.76776, 1, 0.321728, 0.321728, 0.321728, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_xao06"]
+gradient = SubResource("Gradient_ceymt")
+width = 42
+
+[node name="UIItemIcon" type="PanelContainer"]
+custom_minimum_size = Vector2(42, 64)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.0
+offset_top = -32.0
+offset_right = 21.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b01f5")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_xao06")
+
+[node name="ItemTexture" type="TextureRect" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_befpw")
+stretch_mode = 2
+
+[node name="ItemBorder" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_g3wir")
+
+[node name="ModifierTexture" type="TextureRect" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+stretch_mode = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "1"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

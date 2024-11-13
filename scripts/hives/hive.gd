@@ -2,16 +2,26 @@ extends Area2D
 
 class_name Hive
 
+#---
+# ENUMS
 enum states {CHILL, AGGRO}
 enum targeting_mode {CLOSEST}
+enum temperament {PASSIVE, AGGRESSIVE}
 
+#---
+# Constants for configuring bee hover behaviour
 const ORBIT_DISTANCE := 32.0
 const BEE_UNIT := 12
 
+# TODO: remove bee array. not needed as all bees are chilren of the hive
 var bees: Array[Bee] = []
 var enemies: Array[Area2D] = []
 
+# TODO: allow different targetting configurations
 var hive_config := targeting_mode.CLOSEST
+var population: int = 0
+
+# When the hive state is changed, update all children bees to the same state
 var hive_state := states.CHILL:
 	set(value):
 		match value:
@@ -23,20 +33,44 @@ var hive_state := states.CHILL:
 			bee.bee_state = value as Bee.states
 		hive_state = value
 
-var population: int
-var defence_radius := 200.0
+#---
+# Hive attributes
+var defence_radius : float
+var spawn_rate : float
+var cap : int
+var bee_productivity: float
+var bee_temperament: temperament
+var build_cost: float
 
-@export var spawn_rate := 1.0
-@export var cap := 8
+#---
+# Bee attributes
+var bee_health: int
+var bee_speed: float
+
+var modifier_icon_texture: Texture
 
 @onready var timer := $Timer
 @onready var hive_defend_radius := $HiveDefendRadius
 @onready var arrow_pointer = $ArrowPointer
+@onready var modifier_icon = $ModifierIcon
 
+static func build_from_item(item_hive: ItemHive) -> Hive:
+	var new_hive: Hive = item_hive.get_buildable_scene().instantiate()
+	new_hive.defence_radius = item_hive.defence_radius
+	new_hive.spawn_rate =  item_hive.spawn_rate
+	new_hive.cap = item_hive.cap
+	new_hive.bee_productivity = item_hive.bee_productivity
+	new_hive.bee_temperament = item_hive.bee_temperament
+	new_hive.build_cost = item_hive.build_cost
+	new_hive.bee_health = item_hive.bee_health
+	new_hive.bee_speed = item_hive.bee_speed
+	new_hive.modifier_icon_texture = item_hive.modifier_icon
+	return new_hive
 
 func _ready():
 	timer.wait_time = 1 / spawn_rate
 	arrow_pointer.visible = false
+	modifier_icon.texture = modifier_icon_texture
 
 func _process(delta):
 	if bees.size() < cap and timer.is_stopped():
@@ -46,7 +80,7 @@ func _process(delta):
 
 func spawn_bee():
 	# append a new bee to the hive's bee array, increase population and home all bees
-	var new_bee: Bee = preload("res://scenes/bee.tscn").instantiate()
+	var new_bee: Bee = Bee.new_bee(bee_health, bee_speed)
 	new_bee.target = enemies.back() if not enemies.is_empty() else null
 	new_bee.bee_state = hive_state as Bee.states
 	bees.append(new_bee)
@@ -72,30 +106,28 @@ func kill_bee(bee_to_kill: Bee):
 
 func _on_timer_timeout():
 #	Spawn a bee
-	print("hive timer expired")
 	spawn_bee()
 
 
 func _on_hive_defend_radius_entered(enemy):
-	hive_state = states.AGGRO
-	enemies.append(enemy)
-	if enemies.size() > 1:
-		enemies.sort_custom(sort_enemies)
-	attack_enemies()
-	print("enemy detected: " + str(enemy))
+	if bee_temperament == temperament.AGGRESSIVE:
+		hive_state = states.AGGRO
+		enemies.append(enemy)
+		if enemies.size() > 1:
+			enemies.sort_custom(sort_enemies)
+		attack_enemies()
 
 
 func _on_hive_defend_radius_exited(enemy):
-	enemies.pop_at(enemies.find(enemy))
-	if enemies.size() > 1:
-		enemies.sort_custom(sort_enemies)
-	print("enemy lost: " + str(enemy))
-	if enemies.size() == 0:
-		hive_state = states.CHILL
-		home_all_bees()
-		print("no enemies")
-	else:
-		attack_enemies()
+	if bee_temperament == temperament.AGGRESSIVE:
+		enemies.pop_at(enemies.find(enemy))
+		if enemies.size() > 1:
+			enemies.sort_custom(sort_enemies)
+		if enemies.size() == 0:
+			hive_state = states.CHILL
+			home_all_bees()
+		else:
+			attack_enemies()
 
 func sort_enemies(a: Area2D, b: Area2D):
 	match hive_config:
@@ -107,4 +139,8 @@ func sort_by_closest(a: Area2D, b: Area2D):
 		return true
 	else:
 		return false
-	
+
+func get_resource_count() -> float:
+	if bee_productivity == 0:
+		pass
+	return bees.size() * bee_productivity

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtr455xwuxndl"]
+
+[ext_resource type="Script" path="res://scripts/hotbar_button.gd" id="1_wok5u"]
+
+[node name="HotbarButton" type="Button"]
+size_flags_horizontal = 3
+icon_alignment = 1
+script = ExtResource("1_wok5u")
