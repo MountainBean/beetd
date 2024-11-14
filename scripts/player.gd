@@ -31,5 +31,5 @@ func _physics_process(delta):
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEEDX)
 		velocity.y = move_toward(velocity.y, 0, SPEEDY)
-
+	GameManager.player_pos = position
 	move_and_slide()

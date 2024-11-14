@@ -25,4 +25,4 @@ func _update_item_textures():
 func _on_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 and not event.pressed:
-			get_parent().selected_item = self
+			get_parent().get_parent().selected_item = self

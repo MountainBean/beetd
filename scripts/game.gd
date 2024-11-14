@@ -26,7 +26,7 @@ func _on_build_at_global_pos(global_position: Vector2):
 	if new_building is Hive:
 		if build_hive(new_building, building_coords):
 			Signals.emit_signal("view_mode")
-			GameManager.inventory.remove(GameManager.curr_item)
+			GameManager.inventory.remove(GameManager.curr_item, GameManager.curr_item.inventory_index)
 
 func build_hive(hive: Hive, map_coords: Vector2i) -> bool:
 	if GameManager.curr_resource_count < hive.build_cost:

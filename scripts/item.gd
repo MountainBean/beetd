@@ -9,3 +9,4 @@ extends Resource
 @export var buildable: bool
 @export var quantity: int
 @export var inventory: Inventory
+@export var inventory_index: int

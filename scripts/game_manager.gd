@@ -22,6 +22,8 @@ var curr_resource_count: float:
 		Signals.emit_signal("resource_count_updated", value)
 		curr_resource_count = value
 
+var player_pos: Vector2 = Vector2.ZERO
+
 func _ready():
 	Signals.connect("place_mode", _on_place_mode)
 	Signals.connect("view_mode", _on_view_mode)
@@ -30,10 +32,11 @@ func _ready():
 	inventory = Inventory.new()
 	
 	# create example hive item
-	inventory.add(generate_hive(Hive.temperament.PASSIVE))
-	inventory.add(generate_hive(Hive.temperament.AGGRESSIVE))
+	inventory.add(generate_hive(Hive.temperament.PASSIVE), 0)
+	inventory.add(generate_hive(Hive.temperament.AGGRESSIVE), 1)
 	for item in inventory.items:
-		item.inventory = inventory
+		if item:
+			item.inventory = inventory
 
 func _on_place_mode():
 	mode = game_modes.PLACE

@@ -159,4 +159,3 @@ position = Vector2(1, 7.5)
 shape = SubResource("RectangleShape2D_4rl6g")
 
 [node name="UI" parent="." instance=ExtResource("3_mmscw")]
-z_index = 5

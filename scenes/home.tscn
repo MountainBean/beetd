@@ -1,12 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://cffa24xwof6hf"]
+[gd_scene load_steps=3 format=3 uid="uid://cffa24xwof6hf"]
 
-[ext_resource type="Texture2D" uid="uid://lpedsem2fxhy" path="res://assets/tribalhero_graphics/TOWNCENTER_STRUCTURE.png" id="1_xwyj2"]
+[ext_resource type="Texture2D" uid="uid://xv1wl7lyhs82" path="res://assets/nature free/global.png" id="1_2nuip"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tt34o"]
+radius = 5.0
 
 [node name="Home" type="Area2D"]
-position = Vector2(0, -17)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_xwyj2")
+texture = ExtResource("1_2nuip")
+region_enabled = true
+region_rect = Rect2(32.9533, 0.760963, 14.2501, 15.4786)
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(33, 17, 0, 0, -32, 18, 0, 34)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_tt34o")
