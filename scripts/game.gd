@@ -11,9 +11,20 @@ func _ready():
 	Signals.connect("build_at_global_pos", _on_build_at_global_pos)
 
 func _process(delta):
-	if GameManager.mode == GameManager.game_modes.PLACE and not player.ui.inventory_panel.visible:
-		if ghost_cursors.get_children().size() > 0:
-			ghost_cursors.get_child(0).position = tile_map_layer.to_global(get_nearest_grid_centre(get_global_mouse_position()))
+	if GameManager.mode == GameManager.game_modes.PLACE:
+		if GameManager.curr_item is Buildable:
+			# draw a non-functional ghost hive under the cursor
+			if ghost_cursors.get_children().size() > 0:
+				ghost_cursors.get_child(0).position = tile_map_layer.to_global(get_nearest_grid_centre(get_global_mouse_position()))
+		elif GameManager.curr_item is Queen:
+			# Get GameManager to highlight the hive under the cursor
+			var hive_at_mouse: Hive = GameManager.tiles.get(
+				str(get_tile_at(			# TODO: ugly af
+					get_global_mouse_position() + Vector2(0,tile_map_layer.tile_set.tile_size.y/2)
+				))				# y offset because the hives are tall
+			)
+			if GameManager.highlighted_hive != hive_at_mouse:
+				GameManager.highlighted_hive = hive_at_mouse
 
 func _on_build_at_global_pos(global_position: Vector2):
 	var new_building = Hive.build_from_item(GameManager.curr_item)

@@ -14,6 +14,8 @@ func _physics_process(delta):
 		Signals.emit_signal("view_mode")
 	if Input.is_action_just_pressed("open_inventory"):
 		ui.inventory_panel.visible = not ui.inventory_panel.visible
+		if ui.inventory_panel.visible:
+			Signals.emit_signal("view_mode")
 	if Input.is_action_just_pressed("close_menu"):
 		ui.inventory_panel.visible = false
 	if GameManager.mode == GameManager.game_modes.PLACE and not ui.inventory_panel.visible:

@@ -122,13 +122,3 @@ func get_resource_count() -> float:
 	if bee_productivity == 0:
 		pass
 	return bees.size() * bee_productivity
-
-
-func _on_mouse_entered():
-	print("hovered: " + str(self))
-	Signals.emit_signal("hovered", self)
-
-
-func _on_mouse_exited():
-	print("un hovered: " + str(self))
-	Signals.emit_signal("un_hovered", self)

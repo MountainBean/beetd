@@ -18,6 +18,13 @@ var mode = game_modes.VIEW:
 					print("Switched to PLACE mode")
 
 var curr_item: Item
+var highlighted_hive: Hive = null:
+	set(new_hive):
+		if highlighted_hive != null:
+			highlighted_hive.sprite.material = null
+		highlighted_hive = new_hive
+		if highlighted_hive != null:
+			highlighted_hive.sprite.material = preload("res://scripts/shaders/outline_white_1px.tres")
 var curr_resource_count: float:
 	set(value):
 		Signals.emit_signal("resource_count_updated", value)
@@ -28,8 +35,6 @@ var player_pos: Vector2 = Vector2.ZERO
 func _ready():
 	Signals.connect("place_mode", _on_place_mode)
 	Signals.connect("view_mode", _on_view_mode)
-	Signals.connect("hovered", _on_hive_hovered)
-	Signals.connect("un_hovered", _on_hive_un_hovered)
 	curr_resource_count = 200
 	
 	inventory = Inventory.new()
@@ -68,10 +73,3 @@ func generate_hive(temperament: Hive.temperament) -> ItemHive:
 			return hive
 		_:
 			return
-
-func _on_hive_hovered(hive: Hive):
-	if mode == game_modes.PLACE and curr_item is Queen:
-		hive.sprite.material = preload("res://scripts/shaders/outline_white_1px.tres")
-
-func _on_hive_un_hovered(hive: Hive):
-	hive.sprite.material = null
