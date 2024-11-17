@@ -5,10 +5,14 @@ extends Node2D
 @onready var ghost_cursors = $GhostCursors
 @onready var player = $Player
 
+var highlights: Array = []
+
 func _ready():
 	Signals.connect("place_mode", _on_place_mode)
 	Signals.connect("view_mode", _on_view_mode)
 	Signals.connect("build_at_global_pos", _on_build_at_global_pos)
+	Signals.connect("place_queen_in_hive", _on_place_queen_in_hive)
+	
 
 func _process(delta):
 	if GameManager.mode == GameManager.game_modes.PLACE:
@@ -17,14 +21,27 @@ func _process(delta):
 			if ghost_cursors.get_children().size() > 0:
 				ghost_cursors.get_child(0).position = tile_map_layer.to_global(get_nearest_grid_centre(get_global_mouse_position()))
 		elif GameManager.curr_item is Queen:
+			var all_hives: Array = GameManager.tiles.values().filter(func(x): return x is Hive)
+			for hive in all_hives:
+				if hive.sprite.material == null and hive.hive_queen == null:
+					hive.sprite.material = preload("res://scripts/shaders/outline_white_1px.tres")
+					if not highlights.has(hive):
+						highlights.append(hive)
 			# Get GameManager to highlight the hive under the cursor
 			var hive_at_mouse: Hive = GameManager.tiles.get(
 				str(get_tile_at(			# TODO: ugly af
 					get_global_mouse_position() + Vector2(0,tile_map_layer.tile_set.tile_size.y/2)
 				))				# y offset because the hives are tall
 			)
-			if GameManager.highlighted_hive != hive_at_mouse:
+			if hive_at_mouse != null and hive_at_mouse.hive_queen == null:
 				GameManager.highlighted_hive = hive_at_mouse
+			else:
+				GameManager.highlighted_hive = null
+	else:
+		for item in highlights:
+			if item.sprite.material != null:
+				item.sprite.material = null
+				highlights.erase(item)
 
 func _on_build_at_global_pos(global_position: Vector2):
 	var new_building = Hive.build_from_item(GameManager.curr_item)
@@ -85,3 +102,12 @@ func _on_resource_tick_timeout():
 	for hive in hives.get_children():
 		resource_gain += hive.get_resource_count()
 	GameManager.add_to_resource_count(resource_gain)
+
+func _on_place_queen_in_hive(queen: Queen, hive: Hive):
+	if hive.hive_queen != null:
+		print("This hive already has a queen!")
+		return
+	hive.hive_queen = queen
+	if queen.quantity == 1:
+		GameManager.highlighted_hive = null
+	GameManager.inventory.remove(queen, queen.inventory_index)

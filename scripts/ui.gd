@@ -2,7 +2,7 @@ class_name UI
 extends CanvasLayer
 
 @onready var inventory_panel = $Control/InventoryPanel
-@onready var inventory_grid = $Control/InventoryPanel/InventoryGrid
+@onready var inventory_grid = $Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid
 @onready var curr_item_icon = $Control/CurrItemIcon
 
 func _ready():

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/ui_empty_panel.gd" id="1_dtwna"]
 
 [node name="EmptyPanel" type="Panel"]
-custom_minimum_size = Vector2(42, 64)
+custom_minimum_size = Vector2(64, 86)
 script = ExtResource("1_dtwna")
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]

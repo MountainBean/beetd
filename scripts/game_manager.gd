@@ -22,9 +22,12 @@ var highlighted_hive: Hive = null:
 	set(new_hive):
 		if highlighted_hive != null:
 			highlighted_hive.sprite.material = null
+			highlighted_hive.sprite.modulate = Color(1,1,1,1)
 		highlighted_hive = new_hive
 		if highlighted_hive != null:
 			highlighted_hive.sprite.material = preload("res://scripts/shaders/outline_white_1px.tres")
+			highlighted_hive.sprite.material.set_shader_parameter("Outline Colour", "#76ffff")
+			highlighted_hive.sprite.modulate = "#76ffff"
 var curr_resource_count: float:
 	set(value):
 		Signals.emit_signal("resource_count_updated", value)
@@ -40,9 +43,8 @@ func _ready():
 	inventory = Inventory.new()
 	
 	# create example hive item
-	inventory.add(generate_hive(Hive.temperament.PASSIVE), 0, 2)
-	inventory.add(generate_hive(Hive.temperament.AGGRESSIVE), 1, 3)
-	inventory.add(FieldQueen.new(), 2, 2)
+	inventory.add(StrawHive.new(), 0, 99)
+	inventory.add(FieldQueen.new(), 2, 99)
 	for item in inventory.items:
 		if item:
 			item.inventory = inventory
@@ -61,15 +63,3 @@ func remove_from_resource_count(resource_loss: float):
 
 func get_player_inventory() -> Inventory:
 	return inventory
-
-
-func generate_hive(temperament: Hive.temperament) -> ItemHive:
-	match temperament:
-		Hive.temperament.AGGRESSIVE:
-			var hive = DefensiveHive.new()
-			return hive
-		Hive.temperament.PASSIVE:
-			var hive = GatheringHive.new()
-			return hive
-		_:
-			return

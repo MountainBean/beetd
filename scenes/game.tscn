@@ -44,6 +44,7 @@ tile_set = SubResource("TileSet_kfax7")
 position = Vector2(146, -99)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(1.5, 1.5)
 position_smoothing_enabled = true
 
 [node name="Home" parent="." instance=ExtResource("3_6sd3q")]

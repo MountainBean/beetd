@@ -2,6 +2,7 @@ class_name FieldQueen
 extends Queen
 
 static var QUEEN_FIELD_ATTRIBUTES: Array = [
+	0.5,					# BEE_SPAWN_RATE
 	0.02,					# BEE_PRODUCTIVITY
 	temperament.PASSIVE,	# BEE_TEMPERAMENT
 	50,						# BEE_HEALTH

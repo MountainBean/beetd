@@ -11,14 +11,16 @@ colors = PackedColorArray(0.370365, 0.370364, 0.370364, 1, 0.53454, 0.674271, 0.
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_xao06"]
 gradient = SubResource("Gradient_ceymt")
-width = 42
+height = 86
 
 [node name="UIItemIcon" type="Control"]
-custom_minimum_size = Vector2(42, 64)
+custom_minimum_size = Vector2(64, 86)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 42.0
 offset_bottom = 64.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_b01f5")
 
 [node name="Background" type="TextureRect" parent="."]
@@ -45,33 +47,42 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="ItemBorder" type="TextureRect" parent="."]
-layout_mode = 2
-offset_right = 42.0
-offset_bottom = 64.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("2_g3wir")
+expand_mode = 1
 
 [node name="ModifierTexture" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = 4.0
+offset_left = 7.0
+offset_top = 15.0
 offset_right = -4.0
-offset_bottom = -4.0
+offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("4_c5h1y")
-stretch_mode = 5
+expand_mode = 1
 
 [node name="Label" type="Label" parent="."]
-layout_mode = 2
-offset_left = 32.0
-offset_top = 41.0
-offset_right = 42.0
-offset_bottom = 64.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "1"

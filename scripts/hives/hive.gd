@@ -27,18 +27,10 @@ var population: int = 0
 #---
 # Hive attributes
 var defence_radius : float
-var spawn_rate : float
 var cap : int
 var build_cost: float
 
-#---
-# Bee attributes
-var bee_health: int
-var bee_speed: float
-var bee_productivity: float
-var bee_temperament: temperament
-
-var modifier_icon_texture: Texture
+var hive_queen: Queen
 
 # References to child nodes
 @onready var timer := $Timer
@@ -58,20 +50,12 @@ static func build_from_item(item_hive: ItemHive) -> Hive:
 	#! Constructor that creates a new Hive object from a given ItemHive object
 	var new_hive: Hive = item_hive.get_buildable_scene().instantiate()
 	new_hive.defence_radius = item_hive.defence_radius
-	new_hive.spawn_rate =  item_hive.spawn_rate
 	new_hive.cap = item_hive.cap
-	new_hive.bee_productivity = item_hive.bee_productivity
-	new_hive.bee_temperament = item_hive.bee_temperament
 	new_hive.build_cost = item_hive.item_build_cost
-	new_hive.bee_health = item_hive.bee_health
-	new_hive.bee_speed = item_hive.bee_speed
-	new_hive.modifier_icon_texture = item_hive.modifier_icon
 	return new_hive
 
 func _ready():
-	timer.wait_time = 1 / spawn_rate
 	show_target = false
-	modifier_icon.texture = modifier_icon_texture
 
 func _process(delta):
 	if bees.size() < cap and timer.is_stopped():
@@ -80,9 +64,9 @@ func _process(delta):
 		arrow_pointer.global_position = enemies.back().global_position
 	
 
-func spawn_bee():
+func spawn_bee(queen: Queen):
 	# append a new bee to the hive's bee array, increase population and home all bees
-	var new_bee: Bee = Bee.new_bee(bee_health, bee_speed)
+	var new_bee: Bee = Bee.new_bee(queen.bee_health, queen.bee_speed)
 	new_bee.target = enemies.back() if not enemies.is_empty() else null
 	new_bee.bee_state = state_machine.current_state.BEE_STATE
 	bees.append(new_bee)
@@ -97,14 +81,16 @@ func kill_bee(bee_to_kill: Bee):
 
 func _on_timer_timeout():
 #	Spawn a bee
-	spawn_bee()
+	if hive_queen != null:
+		spawn_bee(hive_queen)
 
 func _on_hive_defend_radius_entered(enemy):
-	if bee_temperament == temperament.AGGRESSIVE:
-		enemies.append(enemy)
+	if hive_queen != null:
+		if hive_queen.bee_temperament == Queen.temperament.AGGRESSIVE:
+			enemies.append(enemy)
 
 func _on_hive_defend_radius_exited(enemy):
-	if bee_temperament == temperament.AGGRESSIVE:
+	if enemies.has(enemy):
 		enemies.pop_at(enemies.find(enemy))
 
 func _sort_enemies(a: Area2D, b: Area2D):
@@ -119,6 +105,7 @@ func _sort_by_closest(a: Area2D, b: Area2D):
 		return false
 
 func get_resource_count() -> float:
-	if bee_productivity == 0:
-		pass
-	return bees.size() * bee_productivity
+	if hive_queen != null:
+		return bees.size() * hive_queen.bee_productivity
+	else:
+		return 0.0

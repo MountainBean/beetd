@@ -17,140 +17,144 @@ grow_vertical = 2
 mouse_filter = 1
 
 [node name="InventoryPanel" type="Panel" parent="Control"]
-custom_minimum_size = Vector2(600, 288)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -144.0
-offset_right = 200.0
-offset_bottom = 144.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="InventoryGrid" type="GridContainer" parent="Control/InventoryPanel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
+[node name="PanelContainer" type="PanelContainer" parent="Control/InventoryPanel"]
+layout_mode = 2
+offset_left = -266.0
+offset_top = -174.0
+offset_right = 274.0
+offset_bottom = 182.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/InventoryPanel/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="InventoryGrid" type="GridContainer" parent="Control/InventoryPanel/PanelContainer/MarginContainer"]
+layout_mode = 2
 columns = 8
 script = ExtResource("1_wek1o")
 
-[node name="EmptyPanel" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EmptyPanel2" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel2" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel3" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel3" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel4" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel4" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel5" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel5" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel6" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel6" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel7" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel7" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel8" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel8" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel9" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel9" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel10" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel10" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel11" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel11" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel12" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel12" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel13" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel13" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel14" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel14" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel15" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel15" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel16" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel16" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel17" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel17" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel18" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel18" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel19" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel19" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel20" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel20" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel21" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel21" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel22" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel22" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel23" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel23" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel24" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel24" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel25" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel25" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel26" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel26" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel27" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel27" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel28" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel28" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel29" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel29" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel30" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel30" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel31" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
-[node name="EmptyPanel31" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
-layout_mode = 2
-
-[node name="EmptyPanel32" parent="Control/InventoryPanel/InventoryGrid" instance=ExtResource("3_mk14p")]
+[node name="EmptyPanel32" parent="Control/InventoryPanel/PanelContainer/MarginContainer/InventoryGrid" instance=ExtResource("3_mk14p")]
 layout_mode = 2
 
 [node name="CurrItemIcon" type="Panel" parent="Control"]
-custom_minimum_size = Vector2(94, 138)
+custom_minimum_size = Vector2(138, 182)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -10.0
-offset_bottom = -10.0
+offset_right = -15.0
+offset_bottom = -15.0
 grow_horizontal = 0
 grow_vertical = 0
 
