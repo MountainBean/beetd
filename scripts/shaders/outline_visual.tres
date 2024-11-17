@@ -1,0 +1,24 @@
+[gd_resource type="VisualShader" load_steps=3 format=3 uid="uid://bq71tnsia48hf"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_6x02m"]
+expanded_output_ports = [0]
+input_name = "color"
+
+[sub_resource type="VisualShaderNodeIf" id="VisualShaderNodeIf_y0kmb"]
+
+[resource]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+
+"
+graph_offset = Vector2(-409.07, 88.6949)
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(660, 160)
+nodes/fragment/3/node = SubResource("VisualShaderNodeInput_6x02m")
+nodes/fragment/3/position = Vector2(-300, 260)
+nodes/fragment/4/node = SubResource("VisualShaderNodeIf_y0kmb")
+nodes/fragment/4/position = Vector2(160, 260)
+nodes/fragment/connections = PackedInt32Array(3, 4, 4, 0)

@@ -2,6 +2,7 @@ extends Node
 
 enum game_modes {VIEW, PLACE}
 
+var player_inventory_open: bool = false
 var tiles: Dictionary = {}
 var inventory: Inventory
 
@@ -27,13 +28,16 @@ var player_pos: Vector2 = Vector2.ZERO
 func _ready():
 	Signals.connect("place_mode", _on_place_mode)
 	Signals.connect("view_mode", _on_view_mode)
+	Signals.connect("hovered", _on_hive_hovered)
+	Signals.connect("un_hovered", _on_hive_un_hovered)
 	curr_resource_count = 200
 	
 	inventory = Inventory.new()
 	
 	# create example hive item
-	inventory.add(generate_hive(Hive.temperament.PASSIVE), 0)
-	inventory.add(generate_hive(Hive.temperament.AGGRESSIVE), 1)
+	inventory.add(generate_hive(Hive.temperament.PASSIVE), 0, 2)
+	inventory.add(generate_hive(Hive.temperament.AGGRESSIVE), 1, 3)
+	inventory.add(FieldQueen.new(), 2, 2)
 	for item in inventory.items:
 		if item:
 			item.inventory = inventory
@@ -55,37 +59,19 @@ func get_player_inventory() -> Inventory:
 
 
 func generate_hive(temperament: Hive.temperament) -> ItemHive:
-	var hive: Item = ItemHive.new()
-	
-	hive.name = "Regular Hive"
-	hive.description = "This is a hive."
-	hive.stackable = true
-	hive.icon = ItemHive.HIVE_TEXTURE
-	hive.stackable = true
-	hive.quantity = 1
-	
-	hive.item_scene_path = ItemHive.HIVE_SCENE_PATH
-	
 	match temperament:
 		Hive.temperament.AGGRESSIVE:
-			hive.defence_radius = DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.DEFENCE_RADIUS]
-			hive.spawn_rate =  DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.SPAWN_RATE]
-			hive.cap = DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.CAP]
-			hive.bee_productivity = DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_PRODUCTIVITY]
-			hive.bee_temperament = DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_TEMPERAMENT]
-			hive.build_cost = DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BUILD_COST]
-			hive.bee_health = DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_HEALTH]
-			hive.bee_speed = DefensiveHive.DEFENSIVE_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_SPEED]
-			hive.modifier_icon = DefensiveHive.DEFENSIVE_MODIFIER_ICON
+			var hive = DefensiveHive.new()
+			return hive
 		Hive.temperament.PASSIVE:
-			hive.defence_radius = GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.DEFENCE_RADIUS]
-			hive.spawn_rate =  GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.SPAWN_RATE]
-			hive.cap = GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.CAP]
-			hive.bee_productivity = GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_PRODUCTIVITY]
-			hive.bee_temperament = GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_TEMPERAMENT]
-			hive.build_cost = GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BUILD_COST]
-			hive.bee_health = GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_HEALTH]
-			hive.bee_speed = GatheringHive.GATHERING_HIVE_ATTRIBUTES[ItemHive.HIVE_ATTRIBUTES.BEE_SPEED]
-			hive.modifier_icon = GatheringHive.GATHERING_MODIFIER_ICON
-	
-	return hive
+			var hive = GatheringHive.new()
+			return hive
+		_:
+			return
+
+func _on_hive_hovered(hive: Hive):
+	if mode == game_modes.PLACE and curr_item is Queen:
+		hive.sprite.material = preload("res://scripts/shaders/outline_white_1px.tres")
+
+func _on_hive_un_hovered(hive: Hive):
+	hive.sprite.material = null

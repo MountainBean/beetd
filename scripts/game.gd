@@ -5,27 +5,21 @@ extends Node2D
 @onready var ghost_cursors = $GhostCursors
 @onready var player = $Player
 
-var grid_x: float
-var grid_y: float
-
 func _ready():
-	grid_x = tile_map_layer.tile_set.tile_size.x
-	grid_y = tile_map_layer.tile_set.tile_size.y
-	print("grid_x: " + str(grid_x) + ", grid_y: " + str(grid_y))
 	Signals.connect("place_mode", _on_place_mode)
 	Signals.connect("view_mode", _on_view_mode)
 	Signals.connect("build_at_global_pos", _on_build_at_global_pos)
 
 func _process(delta):
 	if GameManager.mode == GameManager.game_modes.PLACE and not player.ui.inventory_panel.visible:
-		ghost_cursors.get_child(0).position = tile_map_layer.to_global(get_nearest_grid_centre(get_global_mouse_position()))
+		if ghost_cursors.get_children().size() > 0:
+			ghost_cursors.get_child(0).position = tile_map_layer.to_global(get_nearest_grid_centre(get_global_mouse_position()))
 
 func _on_build_at_global_pos(global_position: Vector2):
 	var new_building = Hive.build_from_item(GameManager.curr_item)
 	var building_coords = get_tile_at(get_global_mouse_position())
 	if new_building is Hive:
 		if build_hive(new_building, building_coords):
-			Signals.emit_signal("view_mode")
 			GameManager.inventory.remove(GameManager.curr_item, GameManager.curr_item.inventory_index)
 
 func build_hive(hive: Hive, map_coords: Vector2i) -> bool:
@@ -65,6 +59,7 @@ func _on_place_mode():
 		if ghost_object is Hive:
 			ghost_object.cap = 0
 		ghost_cursors.add_child(ghost_object)
+	
 
 
 func _on_view_mode():

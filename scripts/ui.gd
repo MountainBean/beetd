@@ -17,6 +17,7 @@ func _on_inventory_panel_hidden():
 
 func _on_selected_item_selected(ui_item: UIItemIcon):
 	var big_icon = ui_item.duplicate()
+	big_icon.modulate = Color(1,1,1,1)
 	big_icon.scale = Vector2(2, 2)
 	big_icon.position = Vector2(5, 5)
 	curr_item_icon.add_child(big_icon)

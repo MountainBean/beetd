@@ -3,12 +3,13 @@ extends GridContainer
 var inventory: Inventory
 var selected_item: UIItemIcon:
 	set(item):
+		if selected_item != null:
+			selected_item.modulate = Color(1,1,1,1)
+			emit_signal("selected_item_cleared")
 		selected_item = item
 		if item != null:
 			emit_signal("selected_item_selected", selected_item)
-			selected_item.modulate = "#777777"
-		else:
-			emit_signal("selected_item_cleared")
+			selected_item.modulate = "#777777"	
 @onready var ui_item = preload("res://scenes/ui_item_icon.tscn")
 
 signal selected_item_selected(item: UIItemIcon)
@@ -37,17 +38,20 @@ func _on_item_added(item: Item, index: int, qty: int, total: int):
 
 
 func _on_item_removed(item: Item, index: int, qty: int, total: int):
+	var ui_item_to_remove = get_child(index).get_child(0)
 	if total == 0:
-		if selected_item.item == item:
+		Signals.emit_signal("view_mode")
+		if selected_item == ui_item_to_remove:
 			_clear_selected_item()
-		get_child(index).get_child(0).queue_free()
+		ui_item_to_remove.queue_free()
 	else:
-		ui_item._update_item_textures()
+		ui_item_to_remove._update_item_textures()
+		selected_item = ui_item_to_remove
 
 func _on_item_moved(item: Item, index: int, new_index: int):
-	ui_item = get_child(index).get_child(0)
-	ui_item.reparent(get_child(new_index))
-	ui_item.position = Vector2.ZERO
+	var existing_ui_item = get_child(index).get_child(0)
+	existing_ui_item.reparent(get_child(new_index))
+	existing_ui_item.position = Vector2.ZERO
 	
 
 func empty_panel_clicked(index: int):
@@ -56,5 +60,4 @@ func empty_panel_clicked(index: int):
 		_clear_selected_item()
 
 func _clear_selected_item():
-	selected_item.modulate = Color(1,1,1,1)
 	selected_item = null

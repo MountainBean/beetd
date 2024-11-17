@@ -14,3 +14,7 @@ static var DEFENSIVE_HIVE_ATTRIBUTES: Array = [
 ]
 
 static var DEFENSIVE_MODIFIER_ICON: Texture = preload("res://assets/custom/hive_attribute_aggressive.png")
+
+func _init(qty: int = 1):
+	super._init("Defensive Hive", "Hive attacks enemies that approach", DEFENSIVE_HIVE_ATTRIBUTES, qty)
+	modifier_icon = DEFENSIVE_MODIFIER_ICON

@@ -1,12 +1,19 @@
 class_name Item
 extends Resource
 
-@export var name: String = "Item Name"
-@export var description: String
-@export var icon: Texture
-@export var modifier_icon: Texture
-@export var stackable: bool
-@export var buildable: bool
-@export var quantity: int
-@export var inventory: Inventory
-@export var inventory_index: int
+var name: String
+var description: String
+var icon: Texture
+var stackable: bool
+var quantity: int
+var modifier_icon: Texture
+
+var buildable: bool = false
+
+var inventory: Inventory
+var inventory_index: int
+
+func _init(item_name: String, item_desc: String, qty: int = 1):
+	name = item_name
+	description = item_desc
+	quantity = qty
