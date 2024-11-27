@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://brrf7fsil1mhw"]
+[gd_scene load_steps=10 format=3 uid="uid://brrf7fsil1mhw"]
 
 [ext_resource type="Script" path="res://scripts/hives/hive.gd" id="1_nuuht"]
 [ext_resource type="Texture2D" uid="uid://dkr22ahsdws7f" path="res://assets/custom/hive_tile.png" id="2_lvoxt"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/general/state_machine.gd" id="5_fb6tx"]
 [ext_resource type="Script" path="res://scripts/hives/states/hive_chill.gd" id="6_krfsl"]
 [ext_resource type="Script" path="res://scripts/hives/states/hive_aggro.gd" id="7_svy3g"]
+[ext_resource type="Texture2D" uid="uid://dpv0stejvopcd" path="res://assets/custom/hive_is_aggro.png" id="8_srky5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xrd0x"]
 radius = 13.0
@@ -18,7 +19,6 @@ script = ExtResource("1_nuuht")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
-scale = Vector2(1.00262, 1)
 texture = ExtResource("2_lvoxt")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -46,6 +46,13 @@ script = ExtResource("6_krfsl")
 [node name="HiveAggro" type="Node" parent="StateMachine"]
 script = ExtResource("7_svy3g")
 
+[node name="IndicatorAggro" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("8_srky5")
+offset = Vector2(16, -22)
+
+[node name="Bees" type="Node2D" parent="."]
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
-[connection signal="area_entered" from="HiveDefendRadius" to="." method="_on_hive_defend_radius_entered"]
-[connection signal="area_exited" from="HiveDefendRadius" to="." method="_on_hive_defend_radius_exited"]
+[connection signal="body_entered" from="HiveDefendRadius" to="." method="_on_hive_defend_radius_entered"]
+[connection signal="body_exited" from="HiveDefendRadius" to="." method="_on_hive_defend_radius_exited"]

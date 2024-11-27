@@ -20,6 +20,9 @@ var bee_temperament: temperament
 var bee_health: int
 var bee_speed: float
 
+var hive_modifier_icon: Texture
+
+
 func _init(item_name: String, item_desc: String, queen_attributes: Array, qty: int = 1):
 	super._init(item_name, item_desc, qty)
 	bee_spawn_rate = queen_attributes[BEE_ATTRIBUTES.BEE_SPAWN_RATE]

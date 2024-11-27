@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://c07kf3s1qudr0"]
+[gd_scene load_steps=7 format=3 uid="uid://c07kf3s1qudr0"]
 
 [ext_resource type="Script" path="res://scripts/bees/bee.gd" id="1_uvnc4"]
 [ext_resource type="Texture2D" uid="uid://dutwvwx261umn" path="res://assets/custom/bee.png" id="2_ypixv"]
+[ext_resource type="Script" path="res://scripts/general/state_machine.gd" id="3_j7ggs"]
+[ext_resource type="Script" path="res://scripts/bees/states/bee_state_chill.gd" id="4_hluap"]
+[ext_resource type="Script" path="res://scripts/bees/states/bee_state_aggro.gd" id="5_fj5n4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jqwy5"]
 radius = 4.0
@@ -19,4 +22,14 @@ texture = ExtResource("2_ypixv")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CircleShape2D_jqwy5")
 
-[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_j7ggs")
+initial_state = NodePath("Chill")
+
+[node name="Chill" type="Node" parent="StateMachine"]
+script = ExtResource("4_hluap")
+
+[node name="Aggro" type="Node" parent="StateMachine"]
+script = ExtResource("5_fj5n4")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

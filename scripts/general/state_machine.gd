@@ -7,6 +7,7 @@ var current_state: State
 var states: Dictionary = {}
 
 func _ready():
+	await get_parent().ready
 	for child in get_children():
 		if child is State:
 			states[child.name] = child
@@ -21,7 +22,7 @@ func _process(delta):
 
 func _physics_process(delta):
 	if current_state:
-		current_state.update(delta)
+		current_state.physics_update(delta)
 
 func _on_child_transition(state, new_state_name):
 	if state != current_state:

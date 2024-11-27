@@ -4,7 +4,8 @@ extends ItemHive
 # Array indexed by parent class enum HIVE_ATTRIBUTES
 static var STRAW_HIVE_ATTRIBUTES: Array = [
 	150.0,		# DEFENCE_RADIUS
-	8,			# CAP
+	4,			# CAP
+	100			# BUILD_COST
 ]
 static var STRAW_HIVE_TEXTURE: Texture = preload("res://assets/custom/hive_tile.png")
 

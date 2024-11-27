@@ -34,6 +34,9 @@ var curr_resource_count: float:
 		curr_resource_count = value
 
 var player_pos: Vector2 = Vector2.ZERO
+var wave_time := 240
+var wave_timer: SceneTreeTimer
+var wave_no: int = 0
 
 func _ready():
 	Signals.connect("place_mode", _on_place_mode)
@@ -45,9 +48,12 @@ func _ready():
 	# create example hive item
 	inventory.add(StrawHive.new(), 0, 99)
 	inventory.add(FieldQueen.new(), 2, 99)
+	inventory.add(GuardQueen.new(), 4, 99)
 	for item in inventory.items:
 		if item:
 			item.inventory = inventory
+	
+	start_wave_timer()
 
 func _on_place_mode():
 	mode = game_modes.PLACE
@@ -63,3 +69,10 @@ func remove_from_resource_count(resource_loss: float):
 
 func get_player_inventory() -> Inventory:
 	return inventory
+
+func begin_wave():
+	Signals.emit_signal("begin_wave")
+
+func start_wave_timer():
+	wave_timer = get_tree().create_timer(wave_time, false)
+	wave_timer.connect("timeout", begin_wave)

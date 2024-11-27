@@ -17,8 +17,7 @@ void fragment() {
 	alpha += texture(TEXTURE, UV + vec2(-size, 0.0)).a;
 	alpha += texture(TEXTURE, UV + vec2(-size, size)).a;
 	alpha += texture(TEXTURE, UV + vec2(0.0, size)).a;
-	
+
 	vec4 out_colour = mix(sprite_colour, outline_colour, clamp(alpha, 0.0,1.0));
 	COLOR = vec4(out_colour.rgb, clamp(abs(alpha) + sprite_colour.a, 0.0, 1.0));
 }
-

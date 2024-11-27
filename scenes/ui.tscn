@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bsg1hcju7aqna"]
+[gd_scene load_steps=5 format=3 uid="uid://bsg1hcju7aqna"]
 
 [ext_resource type="Script" path="res://scripts/ui.gd" id="1_iyy6h"]
 [ext_resource type="Script" path="res://scripts/inventory_grid.gd" id="1_wek1o"]
 [ext_resource type="PackedScene" uid="uid://bfrr5n2s4ep75" path="res://scenes/ui_empty_panel.tscn" id="3_mk14p"]
+[ext_resource type="Script" path="res://scripts/resource_display.gd" id="4_pwvbm"]
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_iyy6h")
@@ -157,5 +158,32 @@ offset_right = -15.0
 offset_bottom = -15.0
 grow_horizontal = 0
 grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -108.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+
+[node name="ResourceLabel" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "RESOURCE: xx"
+horizontal_alignment = 2
+script = ExtResource("4_pwvbm")
+
+[node name="TimerLabel" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "NEXT WAVE IN: xx"
+horizontal_alignment = 2
 
 [connection signal="hidden" from="Control/InventoryPanel" to="." method="_on_inventory_panel_hidden"]

@@ -25,6 +25,10 @@ GameManager="*res://scripts/game_manager.gd"
 window/size/viewport_width=1422
 window/size/viewport_height=800
 
+[global_group]
+
+player="Group containing the player"
+
 [input]
 
 move_left={

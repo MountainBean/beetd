@@ -24,7 +24,7 @@ func _init(item_name: String, item_desc: String, hive_attributes: Array, qty: in
 	stackable = true
 	
 	item_scene_path = HIVE_SCENE_PATH
-	item_build_cost = HIVE_ATTRIBUTES.BUILD_COST
+	item_build_cost = hive_attributes[HIVE_ATTRIBUTES.BUILD_COST]
 	
 	defence_radius = hive_attributes[HIVE_ATTRIBUTES.DEFENCE_RADIUS]
 	cap = hive_attributes[HIVE_ATTRIBUTES.CAP]
