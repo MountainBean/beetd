@@ -1,8 +1,9 @@
 extends Node2D
 
 @onready var hives = $Hives
-@onready var tile_map_layer = $TileMapLayer
+@onready var tile_map_layer_1 = $TileMapLayer1
 @onready var flower_group_layer = $FlowerGroupLayer
+@onready var flower_layer = $FlowerLayer
 @onready var ghost_cursors = $GhostCursors
 @onready var player = $Player
 @onready var enemy_spawner = $EnemySpawner
@@ -15,45 +16,23 @@ func _ready():
 	Signals.connect("build_at_global_pos", _on_build_at_global_pos)
 	Signals.connect("place_queen_in_hive", _on_place_queen_in_hive)
 	Signals.connect("begin_wave", _on_begin_wave)
-	Signals.connect("enemy_killed", _on_enemy_killed)
+	Signals.connect("wave_end", _on_wave_end)
 	
-	# allocate flora regions
-	for tile_coords in tile_map_layer.get_used_cells():
-		var tile_data = tile_map_layer.get_cell_tile_data(tile_coords)
-		var coord_data = GameManager.tiles.get(str(tile_coords))
-		if coord_data:
-			if coord_data["flower_group"] > 0:
-				continue
-		else:
-			coord_data = {}
-		var tile_data_flora = tile_data.get_custom_data("flora")
-		match tile_data_flora:
-			Flowers.variety.NONE as int:
-				continue
-			Flowers.variety.GRASS as int:
-				continue
-			Flowers.variety.LAWN_DAISY as int:
-				coord_data["flower_group"] = tile_data_flora
-				var neighbors = tile_map_layer.get_surrounding_cells(tile_coords)
-				for neighbor in neighbors:
-					var neighbor_coord_data = GameManager.tiles.get(str(tile_coords)) if GameManager.tiles.get(str(tile_coords)) else {}
-					if tile_map_layer.get_cell_tile_data(neighbor).get_custom_data("flora") != Flowers.variety.GRASS as int:
-						continue
-					neighbor_coord_data.get_or_add("flower_group", tile_data_flora)
-					GameManager.tiles.get_or_add(str(neighbor), neighbor_coord_data)
-				GameManager.tiles.get_or_add(str(tile_coords), coord_data)
+	
+	_assign_fower_groups()
 
-	
 
 func _process(delta):
 	if GameManager.mode == GameManager.game_modes.PLACE:
 		if GameManager.curr_item is Buildable:
 			# draw a non-functional ghost hive under the cursor
 			if ghost_cursors.get_children().size() > 0:
-				ghost_cursors.get_child(0).position = tile_map_layer.to_global(get_nearest_grid_centre(get_global_mouse_position()))
+				ghost_cursors.get_child(0).position = tile_map_layer_1.to_global(get_nearest_grid_centre(get_global_mouse_position()))
 		elif GameManager.curr_item is Queen:
-			var all_hives: Array = GameManager.tiles.values().filter(func(x): return x is Hive)
-			for hive in all_hives:
+			var all_cells_with_hives: Array = GameManager.tiles.values().filter(func(x): return x.has("hive"))
+			for cell in all_cells_with_hives:
+				assert(cell is Dictionary, "This cell contains undefined information")
+				var hive: Hive = cell.get("hive")
 				if hive.sprite.material == null and hive.hive_queen == null:
 					hive.sprite.material = preload("res://scripts/shaders/outline_white_1px.tres")
 					if not highlights.has(hive):
@@ -61,7 +40,7 @@ func _process(delta):
 			# Get GameManager to highlight the hive under the cursor
 			var cell_data_at_mouse = GameManager.tiles.get(
 				str(get_tile_at(			# TODO: ugly af
-					get_global_mouse_position() + Vector2(0,tile_map_layer.tile_set.tile_size.y/2)
+					get_global_mouse_position() + Vector2(0,tile_map_layer_1.tile_set.tile_size.y/2)
 				))				# y offset because the hives are tall
 			)
 			if cell_data_at_mouse:
@@ -77,13 +56,15 @@ func _process(delta):
 				highlights.erase(item)
 		
 		flower_group_layer.clear()
-		var current_coords_hovered = tile_map_layer.local_to_map(tile_map_layer.get_local_mouse_position())
+		var current_coords_hovered = tile_map_layer_1.local_to_map(tile_map_layer_1.get_local_mouse_position())
 		highlight_flower_group(current_coords_hovered)
 		
 		if Input.is_action_just_pressed("LMB"):
-			print("tile at: " + str(tile_map_layer.local_to_map(tile_map_layer.get_local_mouse_position())))
-			print("flora: " + str(get_clicked_tile_data("flora")))
-			print("flower_group: " + str(get_clicked_coord_data_key_value("flower_group")))
+			print("tile at: " + str(tile_map_layer_1.local_to_map(tile_map_layer_1.get_local_mouse_position())))
+			print("tile: " + str(get_clicked_tile_data("flora", tile_map_layer_1)))
+			print("flower: " + str(get_clicked_tile_data("flora", flower_layer)))
+			print("nearest flower: " + str(flower_layer.radial_search_flower(tile_map_layer_1.local_to_map(tile_map_layer_1.get_local_mouse_position()), 3)))
+			
 
 func _on_build_at_global_pos(global_position: Vector2):
 	var new_building = Hive.build_from_item(GameManager.curr_item)
@@ -96,23 +77,32 @@ func build_hive(hive: Hive, map_coords: Vector2i) -> bool:
 	if GameManager.curr_resource_count < hive.build_cost:
 		print("You need more resource. \nRequired: " + str(hive.build_cost) + "\nActual: " + str(GameManager.curr_resource_count))
 		return false
-	var cell_data = GameManager.tiles.get(str(map_coords))
-	if cell_data and cell_data.has("hive"):
+	var cell_data: Dictionary = GameManager.tiles.get(str(map_coords), {})
+	if flower_layer.radial_search_flower(map_coords, 2) == null:
+		print("You must build a hive on a flower group!")
+		return false
+	for neighbours in tile_map_layer_1.get_surrounding_cells(map_coords):
+		if GameManager.tiles.get(str(neighbours)) and GameManager.tiles.get(str(neighbours)).has("hive"):
+			print("This is too close to another hive!")
+			return false
+	if cell_data.has("hive"):
 		print("There is already a hive here!")
 		return false
-	GameManager.tiles[str(map_coords)]["hive"] = hive
-	hive.position = tile_map_layer.map_to_local(map_coords)
+	if not GameManager.tiles.has(str(map_coords)):
+		GameManager.tiles[str(map_coords)] = {"hive": hive}
+	hive.position = tile_map_layer_1.map_to_local(map_coords)
+	hive.coords = map_coords
 	hives.add_child(hive)
 	GameManager.remove_from_resource_count(hive.build_cost)
 	print("new hive at: " + str(map_coords))
 	return true
 
 func get_tile_at(global_coords: Vector2) -> Vector2i:
-	return tile_map_layer.local_to_map(tile_map_layer.to_local(global_coords))
+	return tile_map_layer_1.local_to_map(tile_map_layer_1.to_local(global_coords))
 
 func get_nearest_grid_centre(global_coords: Vector2) -> Vector2:
 	var map_coords: Vector2i = get_tile_at(global_coords)
-	return tile_map_layer.map_to_local(map_coords)
+	return tile_map_layer_1.map_to_local(map_coords)
 	
 
 func instantiate_ghost_object(buildable_item: Buildable) -> Node2D:
@@ -138,7 +128,7 @@ func _on_view_mode():
 		ghost.queue_free()
 
 
-func _on_resource_tick_timeout():
+func _on_wave_end():
 	if hives.get_child_count() == 0:
 		pass
 	var resource_gain := 0.0
@@ -171,13 +161,8 @@ func _on_begin_wave():
 	enemy_spawner.spawns.pop_back()
 	GameManager.start_wave_timer()
 
-func _on_enemy_killed(enemy: Enemy):
-	if enemy_spawner.get_children().filter(func(x): return x is Enemy).size() <= 1:
-		if enemy_spawner.time >= enemy_spawner.spawns[0].time_end: 
-			Signals.emit_signal("last_enemy_killed")
 
-
-func get_clicked_tile_data(data_layer: String):
+func get_clicked_tile_data(data_layer: String, tile_map_layer: TileMapLayer):
 	var clicked_cell = tile_map_layer.local_to_map(tile_map_layer.get_local_mouse_position())
 	var data = tile_map_layer.get_cell_tile_data(clicked_cell)
 	if data:
@@ -186,7 +171,7 @@ func get_clicked_tile_data(data_layer: String):
 		return 0
 
 func get_clicked_coord_data_key_value(key: String):
-	var clicked_cell = tile_map_layer.local_to_map(tile_map_layer.get_local_mouse_position())
+	var clicked_cell = tile_map_layer_1.local_to_map(tile_map_layer_1.get_local_mouse_position())
 	var data = GameManager.tiles.get(str(clicked_cell))
 	if data:
 		return data.get(key)
@@ -195,15 +180,15 @@ func get_clicked_coord_data_key_value(key: String):
 
 func highlight_flower_group(cell: Vector2i):
 	var data = GameManager.tiles.get(str(cell))
-	var vpr = get_viewport_rect().size * 1.1
-	var top_left = tile_map_layer.local_to_map(tile_map_layer.to_local(Vector2(player.global_position.x - vpr.x / 2, player.global_position.y - vpr.y / 2)))
-	var bottom_right = tile_map_layer.local_to_map(tile_map_layer.to_local(Vector2(player.global_position.x + vpr.x / 2, player.global_position.y + vpr.y / 2)))
+	var vpr = get_viewport_rect().size * 2.1
+	var top_left = tile_map_layer_1.local_to_map(tile_map_layer_1.to_local(Vector2(player.global_position.x - vpr.x / 2, player.global_position.y - vpr.y / 2)))
+	var bottom_right = tile_map_layer_1.local_to_map(tile_map_layer_1.to_local(Vector2(player.global_position.x + vpr.x / 2, player.global_position.y + vpr.y / 2)))
 	if !_is_cell_in_tile_box(cell, top_left, bottom_right):
 		return
 	if data and data.get("flower_group"):
 		if data.get("flower_group") > 1:
 			flower_group_layer.set_cell(cell, 4, Vector2i(0,0))
-			for neighbor in tile_map_layer.get_surrounding_cells(cell):
+			for neighbor in tile_map_layer_1.get_surrounding_cells(cell):
 				if flower_group_layer.get_cell_source_id(neighbor) != 4:
 					highlight_flower_group(neighbor)
 
@@ -212,3 +197,25 @@ func _is_cell_in_tile_box(cell: Vector2i, min: Vector2i, max: Vector2i):
 		return true
 	else: 
 		return false
+
+func _assign_fower_groups():
+	# allocate flora regions
+	for flower_cell in flower_layer.get_used_cells():
+		var tile_data = flower_layer.get_cell_tile_data(flower_cell)
+		var tiles_dict_data = {}
+		var tile_data_flora = tile_data.get_custom_data("flora")
+		if tile_data_flora == Flowers.variety.NONE as int:
+			continue
+		elif tile_data_flora == Flowers.variety.GRASS as int:
+			continue
+		elif tile_data_flora >= Flowers.variety.LAWN_DAISY as int:
+			tiles_dict_data["flower_group"] = tile_data_flora
+			var neighbors = flower_layer.get_surrounding_cells(flower_cell)
+			for neighbor in neighbors:
+				var neighbor_tiles_dict_data = GameManager.tiles.get(str(neighbor)) if GameManager.tiles.get(str(neighbor)) else {}
+				if tile_map_layer_1.get_cell_tile_data(neighbor) && tile_map_layer_1.get_cell_tile_data(neighbor).get_custom_data("flora") != Flowers.variety.GRASS as int:
+					continue
+				neighbor_tiles_dict_data["flower_group"] = tile_data_flora
+				GameManager.tiles[str(neighbor)] = neighbor_tiles_dict_data
+			GameManager.tiles.get_or_add(str(flower_cell), tiles_dict_data)
+	

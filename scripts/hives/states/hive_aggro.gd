@@ -11,7 +11,6 @@ func assign_bee_directions():
 		bee.set_target_with_delay(hive.enemies[-1] if not hive.enemies.is_empty() else null)
 
 func enter():
-	print("Hive becomes aggro")
 	hive.indicator_aggro.visible = true
 	hive.show_target = true
 

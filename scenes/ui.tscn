@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bsg1hcju7aqna"]
+[gd_scene load_steps=6 format=3 uid="uid://bsg1hcju7aqna"]
 
 [ext_resource type="Script" path="res://scripts/ui.gd" id="1_iyy6h"]
 [ext_resource type="Script" path="res://scripts/inventory_grid.gd" id="1_wek1o"]
 [ext_resource type="PackedScene" uid="uid://bfrr5n2s4ep75" path="res://scenes/ui_empty_panel.tscn" id="3_mk14p"]
 [ext_resource type="Script" path="res://scripts/resource_display.gd" id="4_pwvbm"]
+[ext_resource type="Script" path="res://scripts/enemies_counter.gd" id="5_frpjr"]
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_iyy6h")
@@ -177,7 +178,7 @@ layout_mode = 2
 
 [node name="ResourceLabel" type="Label" parent="Control/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "RESOURCE: xx"
+text = "HONEY: xx"
 horizontal_alignment = 2
 script = ExtResource("4_pwvbm")
 
@@ -185,5 +186,11 @@ script = ExtResource("4_pwvbm")
 layout_mode = 2
 text = "NEXT WAVE IN: xx"
 horizontal_alignment = 2
+
+[node name="EnemiesCounter" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "ENEMIES: xx"
+horizontal_alignment = 2
+script = ExtResource("5_frpjr")
 
 [connection signal="hidden" from="Control/InventoryPanel" to="." method="_on_inventory_panel_hidden"]

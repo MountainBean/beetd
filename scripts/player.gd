@@ -2,7 +2,9 @@ extends CharacterBody2D
 
 const SPEEDX = 300.0
 const SPEEDY = SPEEDX / 2
+
 @onready var ui = $UI
+@onready var camera_2d = $Camera2D
 
 
 func _ready():
@@ -10,6 +12,10 @@ func _ready():
 		
 
 func _physics_process(delta):
+	if Input.is_action_just_pressed("scroll_up"):
+		camera_2d.zoom = camera_2d.zoom * 1.1
+	if Input.is_action_just_pressed("scroll_down"):
+		camera_2d.zoom = camera_2d.zoom * 0.9
 	if Input.is_action_just_pressed("view_mode"):
 		Signals.emit_signal("view_mode")
 	if Input.is_action_just_pressed("open_inventory"):

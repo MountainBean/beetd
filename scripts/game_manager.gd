@@ -2,9 +2,13 @@ extends Node
 
 enum game_modes {VIEW, PLACE}
 
+const DEBUG = true		# Shows debug draw calls
+
 var player_inventory_open: bool = false
 var tiles: Dictionary = {}
 var inventory: Inventory
+var enemies: Dictionary = {}
+var use_world_gen = true
 
 var mode = game_modes.VIEW:
 	set(new_mode):
@@ -34,13 +38,16 @@ var curr_resource_count: float:
 		curr_resource_count = value
 
 var player_pos: Vector2 = Vector2.ZERO
-var wave_time := 240
+var wave_time := 5000
 var wave_timer: SceneTreeTimer
 var wave_no: int = 0
+var enemy_total: int = 0
 
 func _ready():
 	Signals.connect("place_mode", _on_place_mode)
 	Signals.connect("view_mode", _on_view_mode)
+	Signals.connect("enemy_spawned", _on_enemy_spawned)
+	Signals.connect("enemy_killed", _on_enemy_killed)
 	curr_resource_count = 200
 	
 	inventory = Inventory.new()
@@ -76,3 +83,16 @@ func begin_wave():
 func start_wave_timer():
 	wave_timer = get_tree().create_timer(wave_time, false)
 	wave_timer.connect("timeout", begin_wave)
+
+func _on_enemy_spawned(enemy: Enemy):
+	#print("Enemy spawned: " + str(enemy))
+	enemies[str(enemy)] = true
+	enemy_total += 1
+
+func _on_enemy_killed(enemy: Enemy):
+	if enemies.erase(str(enemy)):
+		if enemy_total == 1:
+			Signals.emit_signal("last_enemy_killed")
+			Signals.emit_signal("wave_end")
+		#print("Enemy killed: " + str(enemy))
+		enemy_total -= 1

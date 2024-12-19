@@ -13,13 +13,12 @@ const ORBIT_DISTANCE := 32.0
 const BEE_UNIT := 11
 
 
-var enemies: Array[Enemy] = []:
-	set(new_array):
-		enemies = new_array
+var enemies: Array[Enemy] = []
 
-# TODO: allow different targetting configurations
-var hive_config := targeting_mode.CLOSEST
-var population: int = 0
+
+var hive_config := targeting_mode.CLOSEST	# TODO: allow different targetting configurations
+var population: int = 0		# current number of bees in this hive (excluding queen)
+var coords: Vector2i	# coordinates of cell this hive is built on
 
 #---
 # Hive attributes

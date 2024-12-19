@@ -10,23 +10,27 @@ const SPEEDX = 100
 const SPEEDY = SPEEDX/2
 var last_x = position.x
 var progress = 0.0
-var target := Vector2.ZERO
+var target : Node2D
 var targeting = targeting_modes.PRODUCITVE
 
 
 func _ready():
 	prioritise_target()
 
+func _draw():
+	draw_line(Vector2.ZERO, to_local(target.global_position), Color("#ffffff50"), 4)
+	
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	last_x = position.x
-	progress = Vector2(position.x - target.x, (position.y - target.y) * 2).abs()
-	prioritise_target()
+	progress = Vector2.ZERO.distance_to(to_local(target.global_position))
 	move(delta)
 	if position.x - last_x < 0:
 		animated_sprite.flip_h = true
 	else:
 		animated_sprite.flip_h = false
+	queue_redraw()
 	
 
 func die():
@@ -34,28 +38,29 @@ func die():
 	queue_free()
 
 func prioritise_target():
-	var all_hives: Array = GameManager.tiles.values().filter(func(x): return x is Hive)
-	if not all_hives.is_empty():
-		all_hives.sort_custom(_sort_targets)
-		target = all_hives[0].position
+	var all_cells_with_hives: Array = GameManager.tiles.values().filter(func(x): return x.has("hive"))
+	
+	if not all_cells_with_hives.is_empty():
+		all_cells_with_hives.sort_custom(_sort_targets)
+		target = all_cells_with_hives[0]["hive"]
 	else:
-		target = player.position
+		target = player
 
 func move(delta):
-	velocity = position.direction_to(target) * Vector2(SPEEDX, SPEEDY)
+	velocity = Vector2.ZERO.direction_to(to_local(target.global_position)) * Vector2(SPEEDX, SPEEDY).abs()
 	move_and_slide()
 
 
-func _sort_targets(a: Hive, b: Hive):
+func _sort_targets(a: Dictionary, b: Dictionary):
 	match targeting:
 		targeting_modes.PRODUCITVE:
-			if a.hive_queen == null and b.hive_queen == null:
+			if a["hive"].hive_queen == null and b["hive"].hive_queen == null:
 				return true
-			if a.hive_queen == null:
+			if a["hive"].hive_queen == null:
 				return false
-			if b.hive_queen == null:
+			if b["hive"].hive_queen == null:
 				return true
-			return _sort_by_productive(a, b)
+			return _sort_by_productive(a["hive"], b["hive"])
 				
 
 func _sort_by_productive(a: Hive, b: Hive):

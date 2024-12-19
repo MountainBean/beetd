@@ -3,7 +3,7 @@ extends Queen
 
 static var QUEEN_FIELD_ATTRIBUTES: Array = [
 	0.5,					# BEE_SPAWN_RATE
-	0.1,					# BEE_PRODUCTIVITY
+	15,					# BEE_PRODUCTIVITY
 	temperament.PASSIVE,	# BEE_TEMPERAMENT
 	50,						# BEE_HEALTH
 	80.0					# BEE_SPEED

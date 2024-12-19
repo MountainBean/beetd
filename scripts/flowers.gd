@@ -4,5 +4,6 @@ extends Resource
 enum variety {
 	NONE,
 	GRASS,
-	LAWN_DAISY
+	LAWN_DAISY,
+	YARROW
 }

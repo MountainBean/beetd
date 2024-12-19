@@ -24,6 +24,7 @@ func _on_timer_timeout():
 					var enemy_spawn = new_enemy.instantiate()
 					enemy_spawn.position = to_local(_get_random_position())
 					add_child(enemy_spawn)
+					Signals.emit_signal("enemy_spawned", enemy_spawn)
 					counter += 1
 
 func _get_random_position():
